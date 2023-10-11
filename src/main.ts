@@ -25,7 +25,22 @@ button.addEventListener("click", function () {
   counterText.innerHTML = `Clicked ${counter} times!`;
 });
 
-setInterval(function () {
+/*setInterval(function () {
+  counter++;
+  counterText.innerHTML = `Clicked ${counter} times!`;
+}, 1000);*/
+
+// use window.requestAnimationFrame to update the counter EVERY 1 second
+
+let loopTime: number = 0;
+
+function loop() {
+  loopTime++;
+  if (loopTime % 60 === 0) {
     counter++;
     counterText.innerHTML = `Clicked ${counter} times!`;
-}, 1000);
+  }
+  window.requestAnimationFrame(loop);
+}
+
+window.requestAnimationFrame(loop);
