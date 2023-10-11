@@ -24,3 +24,8 @@ button.addEventListener("click", function () {
   counter++;
   counterText.innerHTML = `Clicked ${counter} times!`;
 });
+
+setInterval(function () {
+    counter++;
+    counterText.innerHTML = `Clicked ${counter} times!`;
+}, 1000);
