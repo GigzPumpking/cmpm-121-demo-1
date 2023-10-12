@@ -14,7 +14,14 @@ const button = document.createElement("button");
 button.innerHTML = "Click me! &#11088;";
 app.append(button);
 
+// Variables
+
 let counter: number = 0;
+let loopTime: number = 0;
+let loopFrequency: number = 60;
+let numUpgrades: number = 1;
+
+// Buttons
 
 const counterText = document.createElement("p");
 counterText.innerHTML = `Clicked ${counter} times!`;
@@ -25,18 +32,29 @@ button.addEventListener("click", function () {
   counterText.innerHTML = `Clicked ${counter} times!`;
 });
 
-/*setInterval(function () {
-  counter++;
+const upgrade = document.createElement("button");
+upgrade.innerHTML = "Upgrade";
+app.append(upgrade);
+
+upgrade.addEventListener("click", function () {
+  counter -= 10;
+  numUpgrades++;
   counterText.innerHTML = `Clicked ${counter} times!`;
-}, 1000);*/
+  loopFrequency = 60 / numUpgrades;
+});
 
-// use window.requestAnimationFrame to update the counter EVERY 1 second
-
-let loopTime: number = 0;
+upgrade.disabled = true;
 
 function loop() {
   loopTime++;
-  if (loopTime % 60 === 0) {
+  if (counter >= 10) {
+    upgrade.disabled = false;
+  } else {
+    upgrade.disabled = true;
+  }
+
+  if (loopTime >= loopFrequency) {
+    loopTime = 0;
     counter++;
     counterText.innerHTML = `Clicked ${counter} times!`;
   }
