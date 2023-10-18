@@ -21,6 +21,7 @@ let loopTime: number = 0;
 
 const generators: number[] = [0, 0, 0];
 const generatorLevels: number[] = [0, 0, 0];
+const generatorCosts: number[] = [10, 100, 1000];
 
 let lastTime = 0;
 let frameCount = 0;
@@ -29,27 +30,45 @@ let fps = 0;
 // Buttons
 
 const counterText = document.createElement("p");
-counterText.innerHTML = `Clicked ${counter} times!`;
+counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
 app.append(counterText);
 
 button.addEventListener("click", function () {
   counter++;
-  counterText.innerHTML = `Clicked ${counter} times!`;
+  counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
 });
 
 const upgrade1 = document.createElement("button");
 const upgrade1Text = document.createElement("p");
-createUpgrade(upgrade1, upgrade1Text, 10, 0, 1, `Generator 1: 10 stars`);
+createUpgrade(
+  upgrade1,
+  upgrade1Text,
+  0,
+  0.1,
+  `Generator 1: ${generatorCosts[0].toFixed(1)} stars`,
+);
 initializeText(upgrade1Text, `${generators[1]} stars / sec`);
 
 const upgrade2 = document.createElement("button");
 const upgrade2Text = document.createElement("p");
-createUpgrade(upgrade2, upgrade2Text, 100, 1, 5, `Generator 2: 100 stars`);
+createUpgrade(
+  upgrade2,
+  upgrade2Text,
+  1,
+  2,
+  `Generator 2: ${generatorCosts[1].toFixed(1)} stars`,
+);
 initializeText(upgrade2Text, `${generators[1]} stars / sec`);
 
 const upgrade3 = document.createElement("button");
 const upgrade3Text = document.createElement("p");
-createUpgrade(upgrade3, upgrade3Text, 1000, 2, 50, `Generator 3: 1000 stars`);
+createUpgrade(
+  upgrade3,
+  upgrade3Text,
+  2,
+  50,
+  `Generator 3: ${generatorCosts[2].toFixed(1)} stars`,
+);
 initializeText(upgrade3Text, `${generators[2]} stars / sec`);
 
 function initializeText(text: HTMLParagraphElement, initalText: string) {
@@ -60,7 +79,6 @@ function initializeText(text: HTMLParagraphElement, initalText: string) {
 function createUpgrade(
   upgrade: any,
   upgradeText: any,
-  cost: number,
   gen: number,
   increase: number,
   initialText: string,
@@ -70,12 +88,16 @@ function createUpgrade(
   upgrade.disabled = true;
 
   upgrade.addEventListener("click", function () {
-    counter -= cost;
-    counterText.innerHTML = `Clicked ${counter} times!`;
-    generators[gen] += increase;
+    counter -= generatorCosts[gen];
+    generatorCosts[gen] = round(generatorCosts[gen] * 1.15);
+    upgrade.innerHTML = `Generator ${gen + 1}: ${generatorCosts[gen]} stars`;
+    counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
+    generators[gen] = round(generators[gen] + increase);
     generatorLevels[gen]++;
-    upgrade.innerHTML = `Generator ${gen + 1}: ${cost} stars`;
-    upgradeText.innerHTML = `${generators[gen]} stars / sec (Level ${generatorLevels[gen]})`;
+    upgrade.innerHTML = `Generator ${gen + 1}: ${generatorCosts[gen]} stars`;
+    upgradeText.innerHTML = `${generators[gen].toFixed(1)} stars / sec (Level ${
+      generatorLevels[gen]
+    })`;
   });
 }
 
@@ -100,18 +122,22 @@ function calculateFPS(timestamp: number) {
   requestAnimationFrame(calculateFPS);
 }
 
+function round(num: number) {
+  return Math.round(num * 10) / 10;
+}
+
 function loop() {
   loopTime++;
-  buttonStatus(upgrade1, 10);
-  buttonStatus(upgrade2, 100);
-  buttonStatus(upgrade3, 1000);
+  buttonStatus(upgrade1, generatorCosts[0]);
+  buttonStatus(upgrade2, generatorCosts[1]);
+  buttonStatus(upgrade3, generatorCosts[2]);
 
   if (loopTime >= fps) {
     loopTime = 0;
     for (let i = 0; i < generators.length; i++) {
-      counter += generators[i];
+      counter = round(counter + generators[i]);
     }
-    counterText.innerHTML = `Clicked ${counter} times!`;
+    counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
   }
   window.requestAnimationFrame(loop);
 }
