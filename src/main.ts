@@ -17,7 +17,6 @@ app.append(button);
 // Variables
 
 let counter: number = 0;
-let loopTime: number = 0;
 
 const generators: number[] = [0, 0, 0];
 const generatorLevels: number[] = [0, 0, 0];
@@ -92,7 +91,8 @@ function createUpgrade(
     generatorCosts[gen] = round(generatorCosts[gen] * 1.15);
     upgrade.innerHTML = `Generator ${gen + 1}: ${generatorCosts[gen]} stars`;
     counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
-    generators[gen] = round(generators[gen] + increase);
+    generators[gen] = generators[gen] + increase;
+    console.log(generators[gen]);
     generatorLevels[gen]++;
     upgrade.innerHTML = `Generator ${gen + 1}: ${generatorCosts[gen]} stars`;
     upgradeText.innerHTML = `${generators[gen].toFixed(1)} stars / sec (Level ${
@@ -119,7 +119,6 @@ function calculateFPS(timestamp: number) {
     frameCount = 0;
     lastTime = timestamp;
   }
-  requestAnimationFrame(calculateFPS);
 }
 
 function round(num: number) {
@@ -127,20 +126,19 @@ function round(num: number) {
 }
 
 function loop() {
-  loopTime++;
+  calculateFPS(performance.now());
   buttonStatus(upgrade1, generatorCosts[0]);
   buttonStatus(upgrade2, generatorCosts[1]);
   buttonStatus(upgrade3, generatorCosts[2]);
 
-  if (loopTime >= fps) {
-    loopTime = 0;
-    for (let i = 0; i < generators.length; i++) {
-      counter = round(counter + generators[i]);
+  for (let i = 0; i < generators.length; i++) {
+    if (fps > 0) {
+      counter = counter + generators[i] / fps;
     }
-    counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
   }
+  counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
+
   window.requestAnimationFrame(loop);
 }
 
-window.requestAnimationFrame(calculateFPS);
 window.requestAnimationFrame(loop);
