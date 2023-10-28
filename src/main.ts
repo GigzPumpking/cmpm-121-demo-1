@@ -2,7 +2,7 @@ import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
-const gameName = "Uh Oh! Stinky!";
+const gameName = "Starenator &#11088";
 
 document.title = gameName;
 
@@ -11,7 +11,7 @@ header.innerHTML = gameName;
 app.append(header);
 
 const button = document.createElement("button");
-button.innerHTML = "Click me! &#11088;";
+button.innerHTML = "Generate &#11088;";
 app.append(button);
 
 // Variables
@@ -29,12 +29,12 @@ let fps = 0;
 // Buttons
 
 const counterText = document.createElement("p");
-counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
+counterText.innerHTML = `Starage: ${counter.toFixed(2)} &#11088!`;
 app.append(counterText);
 
 button.addEventListener("click", function () {
   counter++;
-  counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
+  counterText.innerHTML = `Starage: ${counter.toFixed(2)} &#11088!`;
 });
 
 const upgrade1 = document.createElement("button");
@@ -44,7 +44,7 @@ createUpgrade(
   upgrade1Text,
   0,
   0.1,
-  `Generator 1: ${generatorCosts[0].toFixed(1)} stars`,
+  `Generator 1: ${generatorCosts[0].toFixed(2)} stars`,
 );
 initializeText(upgrade1Text, `${generators[1]} stars / sec`);
 
@@ -55,7 +55,7 @@ createUpgrade(
   upgrade2Text,
   1,
   2,
-  `Generator 2: ${generatorCosts[1].toFixed(1)} stars`,
+  `Generator 2: ${generatorCosts[1].toFixed(2)} stars`,
 );
 initializeText(upgrade2Text, `${generators[1]} stars / sec`);
 
@@ -66,7 +66,7 @@ createUpgrade(
   upgrade3Text,
   2,
   50,
-  `Generator 3: ${generatorCosts[2].toFixed(1)} stars`,
+  `Generator 3: ${generatorCosts[2].toFixed(2)} stars`,
 );
 initializeText(upgrade3Text, `${generators[2]} stars / sec`);
 
@@ -90,12 +90,14 @@ function createUpgrade(
     counter -= generatorCosts[gen];
     generatorCosts[gen] = round(generatorCosts[gen] * 1.15);
     upgrade.innerHTML = `Generator ${gen + 1}: ${generatorCosts[gen]} stars`;
-    counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
+    counterText.innerHTML = `Clicked ${counter.toFixed(2)} times!`;
     generators[gen] = generators[gen] + increase;
     console.log(generators[gen]);
     generatorLevels[gen]++;
-    upgrade.innerHTML = `Generator ${gen + 1}: ${generatorCosts[gen]} stars`;
-    upgradeText.innerHTML = `${generators[gen].toFixed(1)} stars / sec (Level ${
+    upgrade.innerHTML = `Generator ${gen + 1}: ${generatorCosts[gen].toFixed(
+      2,
+    )} stars`;
+    upgradeText.innerHTML = `${generators[gen].toFixed(2)} stars / sec (Level ${
       generatorLevels[gen]
     })`;
   });
@@ -136,7 +138,7 @@ function loop() {
       counter = counter + generators[i] / fps;
     }
   }
-  counterText.innerHTML = `Clicked ${counter.toFixed(1)} times!`;
+  counterText.innerHTML = `Starage: ${counter.toFixed(2)} &#11088!`;
 
   window.requestAnimationFrame(loop);
 }
